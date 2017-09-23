@@ -22,6 +22,18 @@ namespace StructureMap.Testing.Bugs
             var product = container.GetProfile("Foo").GetInstance<Product>();
             product.Inject.ShouldNotBeNull();
         }
+
+        [Fact]
+        public void setter_policies_created_in_child_container_should_be_applied()
+        {
+            var container = new Container().CreateChildContainer();
+
+            container.Configure(cfg => { cfg.Policies.SetAllProperties(x => x.OfType<Injected>()); });
+
+            var product = container.GetInstance<Product>();
+            product.Inject.ShouldNotBeNull();
+        }
+
     }
 
     public class Product
